@@ -43,7 +43,7 @@ status = pd.read_csv(os.path.join(DATA_PATH, 'status.csv'))
 
 # ----------------------------------------
 # PERGUNTA 1:
-# Ex: Quantas corridas aconteceram por temporada desde 1981?
+# Quantas corridas aconteceram por temporada desde 1981?
 # ----------------------------------------
 
 # Pegando corridas depois de 1981
@@ -59,7 +59,7 @@ print("")
 
 # ----------------------------------------
 # PERGUNTA 2:
-# Ex: Quais pilotos mais venceram ao longo da história?
+# Quais pilotos mais venceram ao longo da história?
 # ----------------------------------------
 
 # Pegando as vitórias e o nome dos piltos ganhadores
@@ -80,9 +80,32 @@ top_pilotos['nome_completo'] = top_pilotos['forename'] + ' ' + top_pilotos['surn
 print("Top 10 ganhadores da história:")
 print(top_pilotos[['nome_completo', 'qtd_vitorias']])
 
-
-
 # ----------------------------------------
-# FIM DO SCRIPT
+# PERGUNTA 3:
+# Qual equipe teve mais vitórias?
+# ----------------------------------------
+
+# Pegando as vitorias das equipes
+vitorias_por_equipe = vitorias['constructorId'].value_counts()
+
+# Criando o DataFrame de vitórias
+top_equipe_vitorias = vitorias_por_equipe.reset_index()
+top_equipe_vitorias.columns = ['constructorId', 'qtd_vitorias']
+
+# Juntando com os dados dos constructors para pegar o nome
+top_equipes = top_equipe_vitorias.merge(constructors, on='constructorId')
+
+# Selecionando o Top 10
+top10_equipes = top_equipes.head(10)
+
+# Criando o gráfico
+plt.barh(top10_equipes['name'], top10_equipes['qtd_vitorias'], color='darkred')
+plt.xlabel('Vitórias')
+plt.title('Top 10 Equipes com Mais Vitórias na Fórmula 1')
+plt.gca().invert_yaxis()  # Primeiro lugar no topo
+plt.grid(True)
+plt.show()
+
+
 # ----------------------------------------
 print("\n Análise concluída com sucesso!")

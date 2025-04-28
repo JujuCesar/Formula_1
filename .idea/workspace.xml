@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50f47240-ce06-4831-ae56-ea9990caa4db" name="Changes" comment="Att 1.0 Formula 1">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="50f47240-ce06-4831-ae56-ea9990caa4db" name="Changes" comment="Att Formula 1 - 2 Perguntas feitas" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,7 +73,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744753809384</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Att Formula 1 - 2 Perguntas feitas">
+      <option name="closed" value="true" />
+      <created>1745870579298</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745870579298</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -84,6 +89,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Att 1.0 Formula 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Att 1.0 Formula 1" />
+    <MESSAGE value="Att Formula 1 - 2 Perguntas feitas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Att Formula 1 - 2 Perguntas feitas" />
   </component>
 </project>
