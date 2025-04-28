@@ -36,17 +36,25 @@ seasons = pd.read_csv(os.path.join(DATA_PATH, 'seasons.csv'))
 status = pd.read_csv(os.path.join(DATA_PATH, 'status.csv'))
 
 # Exibir os 5 primeiros registros de exemplo de cada dataset (apagar depois se quiser)
-print("🏁 Races")
-print(races.head())
-print("\n🏎️ Drivers")
-print(drivers.head())
+#print("🏁 Races")
+#print(races.head())
+#print("\n🏎️ Drivers")
+#print(drivers.head())
 
 # ----------------------------------------
 # PERGUNTA 1:
-# Ex: Quantas corridas aconteceram por temporada?
+# Ex: Quantas corridas aconteceram por temporada desde 1981?
 # ----------------------------------------
 
-# Seu código aqui...
+# Pegando corridas depois de 1981
+racesAfter81 = races[races['year'] >= 1981]
+
+# Agrupando as corridas por ano
+corridasPorAno = racesAfter81.groupby('year')['raceId'].count()
+
+print("Corridas desde 1981:")
+print(corridasPorAno)
+print("")
 
 
 # ----------------------------------------
@@ -54,12 +62,25 @@ print(drivers.head())
 # Ex: Quais pilotos mais venceram ao longo da história?
 # ----------------------------------------
 
-# Seu código aqui...
+# Pegando as vitórias e o nome dos piltos ganhadores
+vitorias = results[results['positionOrder'] == 1]
+vitorias_por_piloto = vitorias['driverId'].value_counts()
+
+# Criando DataFrame
+top_vitorias = vitorias_por_piloto.head(10).reset_index()
+top_vitorias.columns = ['driverId', 'qtd_vitorias']
+
+# Juntando com dataset de Drivers para pega o nome
+top_pilotos = top_vitorias.merge(drivers, on='driverId')
+
+# Criando colunas
+top_pilotos['nome_completo'] = top_pilotos['forename'] + ' ' + top_pilotos['surname']
+
+# Saída de dados
+print("Top 10 ganhadores da história:")
+print(top_pilotos[['nome_completo', 'qtd_vitorias']])
 
 
-# Continue com as perguntas 3 a 10 seguindo esse mesmo padrão.
-# Você pode criar gráficos com matplotlib para cada uma também:
-# plt.plot(...), plt.bar(...), etc.
 
 # ----------------------------------------
 # FIM DO SCRIPT
