@@ -106,6 +106,46 @@ plt.gca().invert_yaxis()  # Primeiro lugar no topo
 plt.grid(True)
 plt.show()
 
+# ----------------------------------------
+# PERGUNTA 3:
+# Qual foi o país com mais vitórias? (Gráfico de porcentagem)
+# ----------------------------------------
+
+# Pegando as vitórias e o país dos pilotos ganhadores
+vitorias = results[results['positionOrder'] == 1]
+# Juntando com o dataset de drivers para pegar o país
+vitorias_por_pais = vitorias.merge(drivers, on='driverId')  
+
+# Agrupando por país e contando as vitórias
+vitorias_por_pais = vitorias_por_pais.groupby('nationality').size().sort_values(ascending=False)
+
+# Calculando a porcentagem de vitórias
+vitorias_por_pais_percentual = (vitorias_por_pais / vitorias_por_pais.sum()) * 100
+
+# Criando o DataFrame para exibição
+dados_vitorias = pd.DataFrame({
+  'nacionalidade': vitorias_por_pais.index,
+  'qtd_vitorias': vitorias_por_pais.values,
+  'percentual_vitorias': vitorias_por_pais_percentual.values
+}).head(10)
+
+
+# Criando o gráfico
+fig, ax1 = plt.subplots()
+# Gráfico de barras para a quantidade de vitórias
+ax1.barh(dados_vitorias['nacionalidade'], dados_vitorias['qtd_vitorias'], color='blue', alpha=0.7, label='Quantidade de Vitórias')
+ax1.set_xlabel('Quantidade de Vitórias')
+ax1.set_ylabel('Países')
+ax1.set_title('Top 10 Países com Mais Vitórias na Fórmula 1')
+ax1.invert_yaxis()  # Primeiro lugar no topo
+ax1.grid(True, axis='x')
+# Adicionando um eixo secundário para a porcentagem de vitórias
+ax2 = ax1.twiny()
+ax2.plot(dados_vitorias['percentual_vitorias'], dados_vitorias['nacionalidade'], 'r--', label='Porcentagem de Vitórias')
+ax2.set_xlabel('Porcentagem de Vitórias')
+# Adicionando legenda
+fig.legend(loc='lower right', ncol=2, frameon=True)
+plt.show()
 
 # ----------------------------------------
 print("\n Análise concluída com sucesso!")
