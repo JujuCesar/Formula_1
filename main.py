@@ -13,10 +13,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# Configuração opcional para gráficos
-#plt.style.use('seaborn-darkgrid')
-#plt.rcParams['figure.figsize'] = (10, 6)
-
 # Caminho para a pasta de dados
 DATA_PATH = os.path.join(os.path.dirname(__file__), 'data')
 
@@ -34,12 +30,6 @@ races = pd.read_csv(os.path.join(DATA_PATH, 'races.csv'))
 results = pd.read_csv(os.path.join(DATA_PATH, 'results.csv'))
 seasons = pd.read_csv(os.path.join(DATA_PATH, 'seasons.csv'))
 status = pd.read_csv(os.path.join(DATA_PATH, 'status.csv'))
-
-# Exibir os 5 primeiros registros de exemplo de cada dataset (apagar depois se quiser)
-#print("🏁 Races")
-#print(races.head())
-#print("\n🏎️ Drivers")
-#print(drivers.head())
 
 # ----------------------------------------
 # PERGUNTA 1:
@@ -103,6 +93,72 @@ plt.barh(top10_equipes['name'], top10_equipes['qtd_vitorias'], color='darkred')
 plt.xlabel('Vitórias')
 plt.title('Top 10 Equipes com Mais Vitórias na Fórmula 1')
 plt.gca().invert_yaxis()  # Primeiro lugar no topo
+plt.grid(True)
+plt.show()
+
+
+# ----------------------------------------
+# PERGUNTA 4:
+# Qual piloto correu mais GPs?
+# ----------------------------------------
+
+# Cotando participações
+gps_por_piloto = results['driverId'].value_counts()
+
+
+# Criando DataFrame com os pilotos que mais correram
+top_gps = gps_por_piloto.reset_index()
+top_gps.columns = ['driverId', 'qtd_corridas']
+
+# Juntando com os nomes dos pilotos
+top_pilotos = top_gps.merge(drivers, on='driverId')
+
+# Criando coluna de nome completo
+top_pilotos['nome_completo'] = top_pilotos['forename'] + ' ' + top_pilotos['surname']
+
+# Saída de dados
+print(top_pilotos[['nome_completo', 'qtd_corridas']].head(10))
+
+# ----------------------------------------
+# PERGUNTA 5:
+# Qual piloto obteve mais pole positions?
+# ----------------------------------------
+
+# Pegando pitlotos que largaram da pole
+poles = results[results['grid'] == 1]
+
+# Contando quantas poles cada piloto teve
+poles_por_piloto = poles['driverId'].value_counts().reset_index()
+poles_por_piloto.columns = ['driverId', 'pole_positions']
+
+# Juntando com os nomes dos pilotos
+poles_com_nomes = poles_por_piloto.merge(drivers, on='driverId')
+poles_com_nomes['nome_completo'] = poles_com_nomes['forename'] + ' ' + poles_com_nomes['surname']
+
+# Saída de dados
+top_poles = poles_com_nomes[['nome_completo', 'pole_positions']].head(10)
+print(top_poles)
+
+
+# ----------------------------------------
+# PERGUNTA 6:
+# Qual GP mais recebeu corridas?
+# ----------------------------------------
+
+# Contando quantas vezes cada GP apareceu
+gps_mais_corridas = races['name'].value_counts().reset_index()
+gps_mais_corridas.columns = ['GP', 'Quantidade_de_Corridas']
+
+# Saída de dados
+top_10_gps = gps_mais_corridas.head(10)
+
+# Substituir "Grand Prix" por "GP" para simplificar o nome
+top_10_gps['GP'] = top_10_gps['GP'].str.replace('Grand Prix', 'GP')
+
+plt.barh(top_10_gps['GP'], top_10_gps['Quantidade_de_Corridas'], color='seagreen')
+plt.xlabel('Número de Corridas')
+plt.title('Top 10 GPs que mais receberam corridas')
+plt.gca().invert_yaxis()
 plt.grid(True)
 plt.show()
 
