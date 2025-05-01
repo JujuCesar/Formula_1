@@ -3,9 +3,7 @@
 # Júlio César Corrêa
 # Petterson Ikaro Bento de Souza
 
-
 # ----------------------------------------
-
 
 # Imports
 import pandas as pd
@@ -107,8 +105,8 @@ plt.grid(True)
 plt.show()
 
 # ----------------------------------------
-# PERGUNTA 3:
-# Qual foi o país com mais vitórias? (Gráfico de porcentagem)
+# PERGUNTA 4:
+# Qual foi o país com mais vitórias?
 # ----------------------------------------
 
 # Pegando as vitórias e o país dos pilotos ganhadores
@@ -146,6 +144,30 @@ ax2.set_xlabel('Porcentagem de Vitórias')
 # Adicionando legenda
 fig.legend(loc='lower right', ncol=2, frameon=True)
 plt.show()
+
+# ----------------------------------------
+# PERGUNTA 5:
+# Qual a média de voltas por corrida?
+# ----------------------------------------
+
+# Calculando o número máximo de voltas por corrida (ou seja a última volta é a quantidade de total de voltas)
+voltas_por_corrida = lap_times.groupby('raceId')['lap'].max()
+# Juntando os dados de voltas com o dataset de corridas para obter os circuitos
+voltas_com_circuito = voltas_por_corrida.reset_index().merge(races[['raceId', 'circuitId']], on='raceId')
+
+# Calculando a média de voltas por circuito
+media_voltas_por_circuito = voltas_com_circuito.groupby('circuitId')['lap'].mean().reset_index()
+
+# Calculando estatísticas descritivas
+media_geral_voltas = media_voltas_por_circuito['lap'].mean()
+mediana_voltas = media_voltas_por_circuito['lap'].median()
+desvio_padrao_voltas = media_voltas_por_circuito['lap'].std()
+
+# Exibindo as estatísticas
+print("\nEstatísticas das voltas por circuito:")
+print(f"Média Geral de Voltas: {media_geral_voltas:.2f}")
+print(f"Mediana de Voltas: {mediana_voltas:.2f}")
+print(f"Desvio Padrão de Voltas: {desvio_padrao_voltas:.2f}")
 
 # ----------------------------------------
 print("\n Análise concluída com sucesso!")
