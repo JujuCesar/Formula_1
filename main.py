@@ -162,6 +162,132 @@ plt.gca().invert_yaxis()
 plt.grid(True)
 plt.show()
 
+# ----------------------------------------
+# PERGUNTA 7:
+# Top 10 PitStops mais rapidos
+# ----------------------------------------
+
+# Filtrar pit stops com tempos válidos
+pit_stops_validos = pit_stops[pit_stops['milliseconds'].notnull()]
+pit_stops_validos = pit_stops_validos[pit_stops_validos['milliseconds'] > 0]
+
+# Ordenar pelos mais rápidos e pegar os 10 primeiros
+top_pitstops = pit_stops_validos.sort_values('milliseconds').head(10).copy()
+top_pitstops = top_pitstops.reset_index(drop=True)
+
+# Adicionar nome completo do piloto
+top_pitstops = top_pitstops.merge(drivers, on='driverId')
+top_pitstops['nome_completo'] = top_pitstops['forename'] + ' ' + top_pitstops['surname']
+
+# Converter milissegundos para segundos
+top_pitstops['tempo_segundos'] = top_pitstops['milliseconds'] / 1000
+
+# Garantir ordenação correta no gráfico (mais rápido em cima)
+top_pitstops = top_pitstops.sort_values('tempo_segundos', ascending=True)
+
+# Plot
+plt.barh(top_pitstops['nome_completo'], top_pitstops['tempo_segundos'], color='purple')
+plt.xlabel('Tempo do Pit Stop (s)')
+plt.title('Top 10 Pit Stops Mais Rápidos da História da F1')
+plt.gca().invert_yaxis()
+plt.grid(True)
+plt.show()
+
+
+# ----------------------------------------
+# PERGUNTA 8:
+# Pilotos com mais segundo lugar
+# ----------------------------------------
+
+# Filtrar resultados em 2º lugar
+segundos_lugares = results[results['positionOrder'] == 2]
+
+# Contar quantas vezes cada piloto ficou em segundo
+segundos_por_piloto = segundos_lugares['driverId'].value_counts().reset_index()
+segundos_por_piloto.columns = ['driverId', 'segundos_lugares']
+
+# Pegar os top 10
+top_segundos = segundos_por_piloto.head(10)
+
+# Juntar com os nomes dos pilotos
+top_segundos = top_segundos.merge(drivers, on='driverId')
+top_segundos['nome_completo'] = top_segundos['forename'] + ' ' + top_segundos['surname']
+
+# Ordenar para garantir que o gráfico esteja do maior para o menor (visual)
+top_segundos = top_segundos.sort_values('segundos_lugares', ascending=True)
+
+# Plot
+plt.barh(top_segundos['nome_completo'], top_segundos['segundos_lugares'], color='steelblue')
+plt.xlabel('Número de 2º Lugares')
+plt.title('Top 10 Pilotos com Mais Segundos Lugares na História da F1')
+plt.grid(True)
+plt.show()
+
+# ----------------------------------------
+# PERGUNTA 9:
+# Qual a média de voltas por corrida?
+# ----------------------------------------
+
+# Calculando o número máximo de voltas por corrida (ou seja a última volta é a quantidade de total de voltas)
+voltas_por_corrida = lap_times.groupby('raceId')['lap'].max()
+# Juntando os dados de voltas com o dataset de corridas para obter os circuitos
+voltas_com_circuito = voltas_por_corrida.reset_index().merge(races[['raceId', 'circuitId']], on='raceId')
+
+# Calculando a média de voltas por circuito
+media_voltas_por_circuito = voltas_com_circuito.groupby('circuitId')['lap'].mean().reset_index()
+
+# Calculando estatísticas descritivas
+media_geral_voltas = media_voltas_por_circuito['lap'].mean()
+mediana_voltas = media_voltas_por_circuito['lap'].median()
+desvio_padrao_voltas = media_voltas_por_circuito['lap'].std()
+
+# Exibindo as estatísticas
+print("\nEstatísticas das voltas por circuito:")
+print(f"Média Geral de Voltas: {media_geral_voltas:.2f}")
+print(f"Mediana de Voltas: {mediana_voltas:.2f}")
+print(f"Desvio Padrão de Voltas: {desvio_padrao_voltas:.2f}")
+
+# ----------------------------------------
+# PERGUNTA 10:
+# Qual foi o país com mais vitórias? (Gráfico de porcentagem)
+# ----------------------------------------
+
+# Pegando as vitórias e o país dos pilotos ganhadores
+vitorias = results[results['positionOrder'] == 1]
+# Juntando com o dataset de drivers para pegar o país
+vitorias_por_pais = vitorias.merge(drivers, on='driverId')
+
+# Agrupando por país e contando as vitórias
+vitorias_por_pais = vitorias_por_pais.groupby('nationality').size().sort_values(ascending=False)
+
+# Calculando a porcentagem de vitórias
+vitorias_por_pais_percentual = (vitorias_por_pais / vitorias_por_pais.sum()) * 100
+
+# Criando o DataFrame para exibição
+dados_vitorias = pd.DataFrame({
+  'nacionalidade': vitorias_por_pais.index,
+  'qtd_vitorias': vitorias_por_pais.values,
+  'percentual_vitorias': vitorias_por_pais_percentual.values
+}).head(10)
+
+
+# Criando o gráfico
+fig, ax1 = plt.subplots()
+# Gráfico de barras para a quantidade de vitórias
+ax1.barh(dados_vitorias['nacionalidade'], dados_vitorias['qtd_vitorias'], color='blue', alpha=0.7, label='Quantidade de Vitórias')
+ax1.set_xlabel('Quantidade de Vitórias')
+ax1.set_ylabel('Países')
+ax1.set_title('Top 10 Países com Mais Vitórias na Fórmula 1')
+ax1.invert_yaxis()  # Primeiro lugar no topo
+ax1.grid(True, axis='x')
+# Adicionando um eixo secundário para a porcentagem de vitórias
+ax2 = ax1.twiny()
+ax2.plot(dados_vitorias['percentual_vitorias'], dados_vitorias['nacionalidade'], 'r--', label='Porcentagem de Vitórias')
+ax2.set_xlabel('Porcentagem de Vitórias')
+# Adicionando legenda
+fig.legend(loc='lower right', ncol=2, frameon=True)
+plt.show()
+
 
 # ----------------------------------------
 print("\n Análise concluída com sucesso!")
