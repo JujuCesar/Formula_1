@@ -2,6 +2,7 @@
 # Autores:
 # Júlio César Corrêa
 # Petterson Ikaro Bento de Souza
+#Lucas da Silva Padua GEC 2234
 
 
 # ----------------------------------------
@@ -117,6 +118,7 @@ top_pilotos = top_gps.merge(drivers, on='driverId')
 top_pilotos['nome_completo'] = top_pilotos['forename'] + ' ' + top_pilotos['surname']
 
 # Saída de dados
+print("Pilotos que mais correram GPs:")
 print(top_pilotos[['nome_completo', 'qtd_corridas']].head(10))
 
 # ----------------------------------------
@@ -137,6 +139,7 @@ poles_com_nomes['nome_completo'] = poles_com_nomes['forename'] + ' ' + poles_com
 
 # Saída de dados
 top_poles = poles_com_nomes[['nome_completo', 'pole_positions']].head(10)
+print("Pilotos com mais Pole Positions:")
 print(top_poles)
 
 
