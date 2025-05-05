@@ -1,7 +1,8 @@
 # Projeto: Análise de Dados da Fórmula 1
 # Autores:
-# Júlio César Corrêa
-# Petterson Ikaro Bento de Souza
+# Júlio César Corrêa - GES - N° 404 - C11
+# Petterson Ikaro Bento de Souza - GEC - N° 1894 - C111
+# Lucas da Silva Pádua - GEC - N° 2234 - C11
 
 
 # ----------------------------------------
